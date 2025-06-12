@@ -1,22 +1,30 @@
 const imageInput = document.getElementById('imageInput');
 const captionInput = document.getElementById('captionInput');
+const dateInput = document.getElementById('dateInput');
 const uploadBtn = document.getElementById('uploadBtn');
 const gallery = document.querySelector('.gallery');
 
 // 日本語の曜日
 const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
 
-function getFormattedDate() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
-  const day = now.getDate();
-  const weekday = weekdays[now.getDay()];
-  const hour = now.getHours().toString().padStart(2, '0');
-  const minute = now.getMinutes().toString().padStart(2, '0');
-  return `${year}/${month}/${day}（${weekday}） ${hour}:${minute}`;
+// 日付を整形して返す関数（入力がなければ現在）
+function getFormattedDate(inputDateStr = '') {
+  let date;
+  if (inputDateStr) {
+    date = new Date(inputDateStr);
+  } else {
+    date = new Date();
+  }
+
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const weekday = weekdays[date.getDay()];
+
+  return `${year}/${month}/${day}（${weekday}）`;
 }
 
+// 画像・コメント・日付を表示するアイテム作成
 function createItem(imgSrc, caption, date) {
   const item = document.createElement('div');
   item.className = 'item';
@@ -51,10 +59,11 @@ function createItem(imgSrc, caption, date) {
   gallery.appendChild(item);
 }
 
+// アップロードボタンの処理
 uploadBtn.addEventListener('click', () => {
   const file = imageInput.files[0];
   const caption = captionInput.value || '';
-  const date = getFormattedDate();
+  const date = getFormattedDate(dateInput.value);
 
   if (file) {
     const reader = new FileReader();
@@ -67,9 +76,10 @@ uploadBtn.addEventListener('click', () => {
 
   imageInput.value = '';
   captionInput.value = '';
+  dateInput.value = '';
 });
 
-// PC & スマホ両対応のドラッグ機能
+// PC・スマホ共通ドラッグ処理
 function addDragFunctionality(el) {
   let offsetX, offsetY, isDragging = false;
 
@@ -117,7 +127,7 @@ function addDragFunctionality(el) {
   });
 }
 
-// ローカル保存機能
+// ローカル保存
 function saveToLocalStorage() {
   const items = document.querySelectorAll('.item');
   const data = Array.from(items).map(item => ({
@@ -130,6 +140,7 @@ function saveToLocalStorage() {
   localStorage.setItem('galleryItems', JSON.stringify(data));
 }
 
+// ローカルから読み込み
 function loadFromLocalStorage() {
   const data = JSON.parse(localStorage.getItem('galleryItems') || '[]');
   data.forEach(({ img, caption, date, left, top }) => {
