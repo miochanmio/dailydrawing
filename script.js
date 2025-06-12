@@ -17,25 +17,39 @@ uploadBtn.addEventListener('click', () => {
   }
 
   const reader = new FileReader();
-  reader.onload = function(e) {
-    const item = document.createElement('div');
-    item.className = 'item';
+ reader.onload = function(e) {
+  const item = document.createElement('div');
+  item.className = 'item';
 
-    const img = document.createElement('img');
-    img.src = e.target.result;
-    img.alt = caption;
+  const img = document.createElement('img');
+  img.src = e.target.result;
+  img.alt = caption;
 
-    const cap = document.createElement('div');
-    cap.className = 'caption';
-    cap.textContent = caption;
+  const cap = document.createElement('div');
+  cap.className = 'caption';
+  cap.textContent = caption;
 
-    item.appendChild(img);
-    item.appendChild(cap);
+  // 追加：日時表示用の要素
+  const dateDiv = document.createElement('div');
+  dateDiv.className = 'date';
+  const now = new Date();
+  // 例：YYYY/MM/DD HH:MM形式で表示
+  dateDiv.textContent = now.getFullYear() + '/' + 
+    String(now.getMonth() + 1).padStart(2, '0') + '/' + 
+    String(now.getDate()).padStart(2, '0') + ' ' + 
+    String(now.getHours()).padStart(2, '0') + ':' + 
+    String(now.getMinutes()).padStart(2, '0');
 
-    gallery.appendChild(item);
+  item.appendChild(img);
+  item.appendChild(cap);
+  item.appendChild(dateDiv);
 
-    imageInput.value = '';
-    captionInput.value = '';
+  gallery.appendChild(item);
+
+  imageInput.value = '';
+  captionInput.value = '';
+};
+
   };
   reader.readAsDataURL(file);
 });
