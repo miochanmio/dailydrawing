@@ -24,7 +24,6 @@ input[type="file"] {
 .gallery img {
   width: 100%;
   height: 100px;             /* 高さを小さめに固定 */
-  border-radius: 6px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   object-fit: cover;
   transition: transform 0.2s ease;
