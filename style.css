@@ -1,14 +1,14 @@
 body {
-  font-family: ヒラギノ角ゴ ProN W3, Arial, sans-serif;
-  padding: 20px;
-  background: #fff;
-  color: #000;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  overflow: hidden;
+  background-color: #ffffff;
 }
 
 input[type="file"],
 input[type="text"],
 button {
-  margin: 10px 0;
+  margin: 10px;
   padding: 8px;
   font-size: 16px;
 }
@@ -17,28 +17,53 @@ button {
   cursor: pointer;
 }
 
-.gallery {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
+#gallery {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .item {
-  background: #f8f8f8;
-  padding: 8px;
+  position: absolute;
+  width: 120px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #ccc;
+  padding: 6px;
   text-align: center;
-  border: 1px solid #ddd;
+  border-radius: 6px;
+  animation: float 10s ease-in-out infinite;
 }
 
 .item img {
-  max-width: 100%;
+  width: 100%;
   height: auto;
-  display: block;
-  margin-bottom: 6px;
 }
 
 .caption {
-  font-size: 14px;
-  color: #333;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.date {
+  font-size: 10px;
+  color: #666;
+}
+
+.delete-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  font-size: 10px;
+  padding: 2px 4px;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+@keyframes float {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(5px, -10px); }
+  50% { transform: translate(-10px, 10px); }
+  75% { transform: translate(10px, 5px); }
+  100% { transform: translate(0, 0); }
 }
