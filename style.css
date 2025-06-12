@@ -1,0 +1,44 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #fff;
+  color: #000;
+}
+
+input[type="file"],
+input[type="text"],
+button {
+  margin: 10px 0;
+  padding: 8px;
+  font-size: 16px;
+}
+
+button {
+  cursor: pointer;
+}
+
+.gallery {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.item {
+  background: #f8f8f8;
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.item img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.caption {
+  font-size: 14px;
+  color: #333;
+}
