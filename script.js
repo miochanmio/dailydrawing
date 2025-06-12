@@ -1,110 +1,170 @@
 const imageInput = document.getElementById('imageInput');
 const captionInput = document.getElementById('captionInput');
 const uploadBtn = document.getElementById('uploadBtn');
-const gallery = document.getElementById('gallery');
-const days = ['日', '月', '火', '水', '木', '金', '土'];
+const gallery = document.querySelector('.gallery');
 
-let posts = JSON.parse(localStorage.getItem('posts')) || [];
-posts.forEach(post => renderPost(post));
+// 日本語の曜日
+const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
 
-uploadBtn.addEventListener('click', () => {
-  const file = imageInput.files[0];
-  const caption = captionInput.value.trim();
-  if (!file) return alert('画像を選択してください');
-  if (!caption) return alert('一言コメントを入力してください');
+function getFormattedDate() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  const weekday = weekdays[now.getDay()];
+  const hour = now.getHours().toString().padStart(2, '0');
+  const minute = now.getMinutes().toString().padStart(2, '0');
+  return `${year}/${month}/${day}（${weekday}） ${hour}:${minute}`;
+}
 
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const now = new Date();
-    const dateText = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} (${days[now.getDay()]}) ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-
-    const newPost = {
-      id: Date.now(),
-      image: e.target.result,
-      caption,
-      date: dateText,
-      x: Math.random() * (window.innerWidth - 160),
-      y: Math.random() * (window.innerHeight - 200)
-    };
-
-    posts.push(newPost);
-    savePosts();
-    renderPost(newPost);
-
-    imageInput.value = '';
-    captionInput.value = '';
-  };
-  reader.readAsDataURL(file);
-});
-
-function renderPost(post) {
+function createItem(imgSrc, caption, date) {
   const item = document.createElement('div');
   item.className = 'item';
-  item.dataset.id = post.id;
-  item.style.left = `${post.x}px`;
-  item.style.top = `${post.y}px`;
+  item.style.left = `${Math.random() * 80}%`;
+  item.style.top = `${Math.random() * 80}%`;
 
   const img = document.createElement('img');
-  img.src = post.image;
+  img.src = imgSrc;
 
-  const caption = document.createElement('div');
-  caption.className = 'caption';
-  caption.textContent = post.caption;
+  const captionEl = document.createElement('div');
+  captionEl.className = 'caption';
+  captionEl.textContent = caption;
 
-  const date = document.createElement('div');
-  date.className = 'date';
-  date.textContent = post.date;
+  const dateEl = document.createElement('div');
+  dateEl.className = 'date';
+  dateEl.textContent = date;
 
-  const delBtn = document.createElement('button');
-  delBtn.className = 'delete-btn';
-  delBtn.textContent = '×';
-  delBtn.onclick = () => {
-    posts = posts.filter(p => p.id !== post.id);
-    savePosts();
+  const deleteBtn = document.createElement('button');
+  deleteBtn.className = 'delete-btn';
+  deleteBtn.textContent = '×';
+  deleteBtn.onclick = () => {
     item.remove();
+    saveToLocalStorage();
   };
 
   item.appendChild(img);
-  item.appendChild(caption);
-  item.appendChild(date);
-  item.appendChild(delBtn);
+  item.appendChild(captionEl);
+  item.appendChild(dateEl);
+  item.appendChild(deleteBtn);
+
+  addDragFunctionality(item);
   gallery.appendChild(item);
-
-  makeDraggable(item, post.id);
 }
 
-function savePosts() {
-  localStorage.setItem('posts', JSON.stringify(posts));
-}
+uploadBtn.addEventListener('click', () => {
+  const file = imageInput.files[0];
+  const caption = captionInput.value || '';
+  const date = getFormattedDate();
 
-// ドラッグ機能
-function makeDraggable(elem, postId) {
-  let isDragging = false, offsetX = 0, offsetY = 0;
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      createItem(e.target.result, caption, date);
+      saveToLocalStorage();
+    };
+    reader.readAsDataURL(file);
+  }
 
-  elem.addEventListener('mousedown', e => {
+  imageInput.value = '';
+  captionInput.value = '';
+});
+
+// PC & スマホ両対応のドラッグ機能
+function addDragFunctionality(el) {
+  let offsetX, offsetY, isDragging = false;
+
+  // マウス操作
+  el.addEventListener('mousedown', function (e) {
     isDragging = true;
-    offsetX = e.clientX - elem.offsetLeft;
-    offsetY = e.clientY - elem.offsetTop;
-    elem.style.cursor = 'grabbing';
+    offsetX = e.offsetX;
+    offsetY = e.offsetY;
+    el.style.zIndex = Date.now();
   });
 
-  document.addEventListener('mousemove', e => {
-    if (!isDragging) return;
-    const x = e.clientX - offsetX;
-    const y = e.clientY - offsetY;
-    elem.style.left = `${x}px`;
-    elem.style.top = `${y}px`;
-
-    const index = posts.findIndex(p => p.id === postId);
-    if (index !== -1) {
-      posts[index].x = x;
-      posts[index].y = y;
-      savePosts();
+  document.addEventListener('mousemove', function (e) {
+    if (isDragging) {
+      el.style.left = `${e.pageX - offsetX}px`;
+      el.style.top = `${e.pageY - offsetY}px`;
     }
   });
 
-  document.addEventListener('mouseup', () => {
+  document.addEventListener('mouseup', function () {
     isDragging = false;
-    elem.style.cursor = 'grab';
+  });
+
+  // タッチ操作
+  el.addEventListener('touchstart', function (e) {
+    isDragging = true;
+    const touch = e.touches[0];
+    const rect = el.getBoundingClientRect();
+    offsetX = touch.clientX - rect.left;
+    offsetY = touch.clientY - rect.top;
+    el.style.zIndex = Date.now();
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('touchmove', function (e) {
+    if (isDragging) {
+      const touch = e.touches[0];
+      el.style.left = `${touch.clientX - offsetX}px`;
+      el.style.top = `${touch.clientY - offsetY}px`;
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchend', function () {
+    isDragging = false;
   });
 }
+
+// ローカル保存機能
+function saveToLocalStorage() {
+  const items = document.querySelectorAll('.item');
+  const data = Array.from(items).map(item => ({
+    img: item.querySelector('img').src,
+    caption: item.querySelector('.caption').textContent,
+    date: item.querySelector('.date').textContent,
+    left: item.style.left,
+    top: item.style.top
+  }));
+  localStorage.setItem('galleryItems', JSON.stringify(data));
+}
+
+function loadFromLocalStorage() {
+  const data = JSON.parse(localStorage.getItem('galleryItems') || '[]');
+  data.forEach(({ img, caption, date, left, top }) => {
+    const item = document.createElement('div');
+    item.className = 'item';
+    item.style.left = left;
+    item.style.top = top;
+
+    const imgEl = document.createElement('img');
+    imgEl.src = img;
+
+    const captionEl = document.createElement('div');
+    captionEl.className = 'caption';
+    captionEl.textContent = caption;
+
+    const dateEl = document.createElement('div');
+    dateEl.className = 'date';
+    dateEl.textContent = date;
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.textContent = '×';
+    deleteBtn.onclick = () => {
+      item.remove();
+      saveToLocalStorage();
+    };
+
+    item.appendChild(imgEl);
+    item.appendChild(captionEl);
+    item.appendChild(dateEl);
+    item.appendChild(deleteBtn);
+
+    addDragFunctionality(item);
+    gallery.appendChild(item);
+  });
+}
+
+window.addEventListener('DOMContentLoaded', loadFromLocalStorage);
