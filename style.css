@@ -1,0 +1,131 @@
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* 上寄せ */
+    min-height: 100vh;
+    padding-top: 20px; /* 上部に余白 */
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: #fff;
+    padding: 25px 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+}
+
+header h1 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 0.95em;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.upload-section .form-group {
+    margin-bottom: 20px;
+}
+
+.custom-file-upload {
+    border: 2px dashed #007bff;
+    color: #007bff;
+    background-color: #f8f9fa;
+    display: inline-block;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.custom-file-upload:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+input[type="file"] {
+    display: none; /* Hide the default file input */
+}
+
+#file-name-display {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.submit-btn, .download-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover, .download-btn:hover {
+    background-color: #218838;
+}
+
+.message {
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.result-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.result-section h2 {
+    margin-bottom: 15px;
+}
+
+.image-container {
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9; /* 背景を少し変えて透過を確認しやすく */
+    display: inline-block; /* 画像サイズに合わせる */
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto; /* 中央寄せ */
+}
+
+footer {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    font-size: 0.85em;
+    color: #777;
+}
