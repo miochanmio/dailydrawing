@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: ヒラギノ角ゴ ProN W3, Arial, sans-serif;
   padding: 20px;
   background: #fff;
   color: #000;
@@ -41,4 +41,10 @@ button {
 .caption {
   font-size: 14px;
   color: #333;
+}
+
+.date {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
 }
