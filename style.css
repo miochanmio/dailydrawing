@@ -28,7 +28,17 @@ button {
   padding: 8px;
   font-size: 16px;
   width: 250px;
+  background-color: #ffffff;      /* 背景を白に */
+  border: 1px solid #ccc;         /* 薄いグレーの枠線 */
+  border-radius: 8px;             /* 角を丸く */
+  cursor: pointer;
+  transition: background 0.2s;
 }
+
+button:hover {
+  background-color: #f0f0f0;      /* ホバー時の効果（任意） */
+}
+
 
 .gallery {
   position: relative;
